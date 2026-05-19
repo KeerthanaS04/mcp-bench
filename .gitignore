@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code context (personal — not for public repo)
+CLAUDE.md
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+.uv/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Run artifacts (anywhere in tree)
+results/
+traces/
+*.log
+wandb/
+
+# Sandbox contents (working files created by filesystem MCP server during runs)
+**/sandbox/*
+!**/sandbox/.gitkeep
+
+# Hugging Face / model caches
+.cache/
+
+# Gradio temp / flagged data
+flagged/
+gradio_cached_examples/
