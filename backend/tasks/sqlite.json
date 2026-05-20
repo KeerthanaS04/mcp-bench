@@ -1,0 +1,112 @@
+[
+  {
+    "id": "sql_001_count_rows",
+    "description": "Count rows in a single table",
+    "prompt": "How many rows are in the 'users' table?",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28), ('Dave', 45), ('Eve', 22);"}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b5\\b"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "sql_002_filter_count",
+    "description": "Count with a WHERE filter",
+    "prompt": "How many users in the 'users' table are older than 30? Tell me the count.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28), ('Dave', 45), ('Eve', 22), ('Frank', 50);"}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b3\\b"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "sql_003_describe_schema",
+    "description": "List the columns of a table",
+    "prompt": "List every column name in the 'products' table.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL, stock INTEGER); INSERT INTO products (name, price, stock) VALUES ('Widget', 9.99, 100);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["id", "name", "price", "stock"], "require_all": true, "case_insensitive": true}},
+    "tags": ["single-tool", "read-only", "schema"]
+  },
+  {
+    "id": "sql_004_insert",
+    "description": "Insert a new row",
+    "prompt": "Insert a new user into the 'users' table with name 'Alice' and age 42.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Bob', 35), ('Carol', 28);"}}
+    ],
+    "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT COUNT(*) FROM users WHERE name='Alice' AND age=42", "expected_rows": [[1]]}},
+    "tags": ["single-tool", "write"]
+  },
+  {
+    "id": "sql_005_aggregate",
+    "description": "Aggregate query (average)",
+    "prompt": "What is the average price of products in the 'products' table? Round to one decimal place.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL); INSERT INTO products (name, price) VALUES ('A', 10.0), ('B', 15.0), ('C', 20.0), ('D', 17.0);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "15.5"}},
+    "tags": ["single-tool", "read-only", "aggregate"]
+  },
+  {
+    "id": "sql_006_join",
+    "description": "Join two tables and list results",
+    "prompt": "Find the names of every user who has placed at least one order. Use the 'users' and 'orders' tables.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT); CREATE TABLE orders (id INTEGER PRIMARY KEY, user_id INTEGER, total REAL); INSERT INTO users (name) VALUES ('Alice'), ('Bob'), ('Carol'); INSERT INTO orders (user_id, total) VALUES (1, 50.0), (1, 30.0), (3, 75.0);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["Alice", "Carol"], "require_all": true}},
+    "tags": ["multi-step", "read-only", "join"]
+  },
+  {
+    "id": "sql_007_list_tables",
+    "description": "Enumerate all tables in the database",
+    "prompt": "What tables exist in this database? List every one of them.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER); CREATE TABLE products (id INTEGER); CREATE TABLE orders (id INTEGER);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["users", "products", "orders"], "require_all": true, "case_insensitive": true}},
+    "tags": ["single-tool", "read-only", "schema"]
+  },
+  {
+    "id": "sql_008_update",
+    "description": "Update an existing row",
+    "prompt": "In the 'users' table, change Bob's age to 50.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28);"}}
+    ],
+    "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT age FROM users WHERE name='Bob'", "expected_rows": [[50]]}},
+    "tags": ["single-tool", "write"]
+  },
+  {
+    "id": "sql_009_delete",
+    "description": "Delete a row matching a condition",
+    "prompt": "Delete the user named 'Charlie' from the 'users' table.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Charlie', 40);"}}
+    ],
+    "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT COUNT(*) FROM users WHERE name='Charlie'", "expected_rows": [[0]]}},
+    "tags": ["single-tool", "write"]
+  },
+  {
+    "id": "sql_010_recover_table_typo",
+    "description": "Error recovery: query a misspelled table name",
+    "prompt": "Find the maximum age in the 'userz' table and report it. (Note: that name might be misspelled in the prompt — figure out the correct table if so.)",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 99), ('Dave', 45);"}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b99\\b"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"]
+  }
+]

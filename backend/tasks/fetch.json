@@ -1,0 +1,95 @@
+[
+  {
+    "id": "fetch_001_title",
+    "description": "Fetch a page and identify its title text",
+    "prompt": "Fetch the page at https://example.com and tell me what heading or title appears on it.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "fetch_002_json_field",
+    "description": "Fetch a JSON endpoint and extract a field",
+    "prompt": "Fetch the JSON at https://httpbin.org/json and tell me the value of the 'title' field of the slideshow.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Sample Slide Show"}},
+    "tags": ["single-tool", "read-only", "json"]
+  },
+  {
+    "id": "fetch_003_two_pages",
+    "description": "Fetch two pages and answer a question about both",
+    "prompt": "Fetch https://example.com and https://www.iana.org/help/example-domains. Do both pages mention the word 'example'? Answer yes or no.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["multi-step", "read-only"]
+  },
+  {
+    "id": "fetch_004_recover_invalid_host",
+    "description": "Error recovery after a host that does not resolve",
+    "prompt": "Try to fetch http://this-domain-does-not-exist-987654321.invalid/ first. If it fails, fetch https://example.com instead and tell me what heading is on that page.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"]
+  },
+  {
+    "id": "fetch_005_uuid_format",
+    "description": "Fetch a UUID endpoint and report the value",
+    "prompt": "Fetch https://httpbin.org/uuid and tell me the UUID value that the response contains.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"}},
+    "tags": ["single-tool", "read-only", "json"]
+  },
+  {
+    "id": "fetch_006_keyword_presence",
+    "description": "Fetch a page and check for a specific word",
+    "prompt": "Fetch https://example.com. Does the page body contain the word 'illustrative'? Answer yes or no.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "fetch_007_link_destination",
+    "description": "Fetch a page and identify the link it points to",
+    "prompt": "Fetch https://example.com. The page contains exactly one hyperlink in its body. Tell me what domain that link points to.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "iana.org"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "fetch_008_json_nested",
+    "description": "Fetch a JSON document and navigate a nested field",
+    "prompt": "Fetch https://httpbin.org/json. In the slideshow object, the slides array has multiple entries. Tell me the 'type' of the first slide.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "all"}},
+    "tags": ["single-tool", "read-only", "json"]
+  },
+  {
+    "id": "fetch_009_recover_http_500",
+    "description": "Error recovery after a non-2xx HTTP response",
+    "prompt": "Fetch https://httpbin.org/status/500. If the request fails or returns an error, fetch https://example.com instead and tell me the page's main heading.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"]
+  },
+  {
+    "id": "fetch_010_dual_source",
+    "description": "Fetch two endpoints and combine the result",
+    "prompt": "Fetch both https://httpbin.org/uuid and https://httpbin.org/json. Tell me both: the uuid value, and the title of the slideshow.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "final_text_regex", "params": {"pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"}},
+      {"kind": "final_text_contains", "params": {"substring": "Sample Slide Show"}}
+    ]}},
+    "tags": ["multi-step", "read-only", "json"]
+  }
+]
