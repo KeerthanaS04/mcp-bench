@@ -1,0 +1,123 @@
+[
+  {
+    "id": "fs_001_read_line",
+    "description": "Read a file and report a specific line",
+    "prompt": "Read the file 'notes.txt' in your working directory and tell me what the third line says.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "notes.txt", "content": "line one is here\nline two is here\nthe third line says: orange marmalade\nline four\n"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "orange marmalade"}},
+    "tags": ["single-tool", "read-only"]
+  },
+  {
+    "id": "fs_002_write_exact",
+    "description": "Write a file with exact content",
+    "prompt": "Create a file named 'greeting.txt' in your working directory containing exactly the text: Hello, MCP!",
+    "servers": ["filesystem"],
+    "setup": [],
+    "check": {"kind": "file_content_equals", "params": {"path": "greeting.txt", "content": "Hello, MCP!", "strip": true}},
+    "tags": ["single-tool", "write"]
+  },
+  {
+    "id": "fs_003_count_txt",
+    "description": "List a directory and count files by extension",
+    "prompt": "Look at the files in your working directory. How many of them have the .txt extension?",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "a.txt", "content": "a"}},
+      {"kind": "write_file", "params": {"path": "b.txt", "content": "b"}},
+      {"kind": "write_file", "params": {"path": "c.txt", "content": "c"}},
+      {"kind": "write_file", "params": {"path": "data.csv", "content": "x,y"}},
+      {"kind": "write_file", "params": {"path": "notes.md", "content": "# md"}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b3\\b"}},
+    "tags": ["single-tool", "read-only", "counting"]
+  },
+  {
+    "id": "fs_004_compare_files",
+    "description": "Read two files and compare their content",
+    "prompt": "Read the files 'a.txt' and 'b.txt'. Do they contain the same content? Answer yes or no.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "a.txt", "content": "shared content here"}},
+      {"kind": "write_file", "params": {"path": "b.txt", "content": "shared content here"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["multi-step", "read-only"]
+  },
+  {
+    "id": "fs_005_find_file",
+    "description": "Search for a file by name pattern in a directory tree",
+    "prompt": "There is a file somewhere in this directory tree whose name contains the word 'secret'. Find it and tell me its name (just the filename, not the full path).",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "mkdir", "params": {"path": "docs/2024"}},
+      {"kind": "mkdir", "params": {"path": "logs"}},
+      {"kind": "write_file", "params": {"path": "docs/readme.txt", "content": "doc"}},
+      {"kind": "write_file", "params": {"path": "logs/run.log", "content": "log"}},
+      {"kind": "write_file", "params": {"path": "docs/2024/secret_notes.txt", "content": "shh"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "secret_notes"}},
+    "tags": ["multi-step", "read-only", "search"]
+  },
+  {
+    "id": "fs_006_edit_in_place",
+    "description": "Edit a file by replacing one word",
+    "prompt": "There is a file 'report.md' in your working directory. Replace the word 'TODO' with the word 'DONE' in that file. Keep the rest of the content unchanged.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "report.md", "content": "# Report\n\nStatus: TODO\n\nDetails follow.\n"}}
+    ],
+    "check": {"kind": "file_content_equals", "params": {"path": "report.md", "content": "# Report\n\nStatus: DONE\n\nDetails follow.\n"}},
+    "tags": ["single-tool", "write", "edit"]
+  },
+  {
+    "id": "fs_007_create_nested",
+    "description": "Create a directory and place a file in it",
+    "prompt": "Create a directory named 'out' in your working directory, and inside it create a file 'summary.txt' that contains the word: done",
+    "servers": ["filesystem"],
+    "setup": [],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "file_exists", "params": {"path": "out/summary.txt"}},
+      {"kind": "file_content_contains", "params": {"path": "out/summary.txt", "substring": "done"}}
+    ]}},
+    "tags": ["multi-step", "write"]
+  },
+  {
+    "id": "fs_008_rename",
+    "description": "Rename a file, preserving content",
+    "prompt": "Rename the file 'old_name.txt' to 'new_name.txt'. Do not change its content.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "old_name.txt", "content": "important payload"}}
+    ],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "file_not_exists", "params": {"path": "old_name.txt"}},
+      {"kind": "file_content_equals", "params": {"path": "new_name.txt", "content": "important payload"}}
+    ]}},
+    "tags": ["single-tool", "write"]
+  },
+  {
+    "id": "fs_009_recover_missing_file",
+    "description": "Error recovery: read a missing file, then create it",
+    "prompt": "First, try to read the file 'does_not_exist.txt'. If reading it fails because the file is missing, then create that file with the content: placeholder",
+    "servers": ["filesystem"],
+    "setup": [],
+    "check": {"kind": "file_content_equals", "params": {"path": "does_not_exist.txt", "content": "placeholder", "strip": true}},
+    "tags": ["error-recovery", "multi-step", "RQ2"]
+  },
+  {
+    "id": "fs_010_count_lines",
+    "description": "Read multiple files and sum a numeric property",
+    "prompt": "There are several .log files in your working directory. Count the total number of lines across all of them and tell me the total. (A line is anything ending in a newline.)",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "a.log", "content": "l1\nl2\nl3\n"}},
+      {"kind": "write_file", "params": {"path": "b.log", "content": "l1\nl2\n"}},
+      {"kind": "write_file", "params": {"path": "c.log", "content": "l1\nl2\nl3\nl4\nl5\n"}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b10\\b"}},
+    "tags": ["multi-step", "read-only", "counting"]
+  }
+]
