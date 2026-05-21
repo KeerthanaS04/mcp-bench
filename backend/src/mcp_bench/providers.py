@@ -74,6 +74,23 @@ MODELS: dict[str, ModelSpec] = {
     "deepseek-v4-flash": ModelSpec(
         "deepseek-v4-flash", "nvidia", "deepseek-ai/deepseek-v4-flash"
     ),
+    "deepseek-v4-pro": ModelSpec(
+        "deepseek-v4-pro", "nvidia", "deepseek-ai/deepseek-v4-pro"
+    ),
+    "qwen-3.5-122b": ModelSpec(
+        "qwen-3.5-122b", "nvidia", "qwen/qwen3.5-122b-a10b"
+    ),
+    # Third Phase-1 family, on Groq (NVIDIA's DeepSeek/Llama-4/Qwen3.5 were all
+    # flaky for tool use as of 2026-05). GPT-OSS is a distinct model family and
+    # Groq is a second provider — doubles as early RQ3 cross-provider signal.
+    "gpt-oss-120b": ModelSpec(
+        "gpt-oss-120b", "groq", "openai/gpt-oss-120b"
+    ),
+    # Same logical model as llama-3.3-70b but on Groq — for RQ3 (does the NVIDIA
+    # loop pathology reproduce on a different provider?).
+    "llama-3.3-70b-groq": ModelSpec(
+        "llama-3.3-70b-groq", "groq", "llama-3.3-70b-versatile"
+    ),
 }
 
 
