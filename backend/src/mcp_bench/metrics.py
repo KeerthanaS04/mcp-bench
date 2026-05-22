@@ -22,6 +22,7 @@ from typing import Iterable
 
 from .agent import Trace
 from .mcp_client import SEP
+from .providers import cost_usd
 from .tasks import Task
 
 
@@ -36,12 +37,14 @@ class PerTaskMetrics:
     n_wrong_server: int = 0  # calls to a tool from a server not in task.servers
     n_accepted: int = 0  # tool_result with is_error == False
     n_errored: int = 0  # tool_result with is_error == True
+    n_tools_available: int = 0  # size of the toolset exposed (incl. distractors) — RQ1 stratifier
 
     had_tool_error: bool = False
 
     steps: int = 0  # assistant turns
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    cost_usd: float = 0.0  # RQ4: priced from tokens, 0.0 if model unpriced
 
     status: str = ""  # "answered" | "step_cap" | "model_error"
 
@@ -64,6 +67,7 @@ class ModelMetrics:
     # Secondary
     s2s: float | None = None  # mean tool calls in successful tasks; None if no successes
     avr: float = 0.0
+    cpst: float | None = None  # RQ4: USD cost per successful task; None if no successes
     mean_steps: float = 0.0
     mean_prompt_tokens: float = 0.0
     mean_completion_tokens: float = 0.0
@@ -73,6 +77,7 @@ class ModelMetrics:
     n_step_cap: int = 0
     n_with_error: int = 0
     total_tool_calls: int = 0
+    total_cost_usd: float = 0.0
 
 
 def compute_per_task(
@@ -107,10 +112,14 @@ def compute_per_task(
         n_wrong_server=n_wrong_server,
         n_accepted=n_accepted,
         n_errored=n_errored,
+        n_tools_available=len(available),
         had_tool_error=n_errored > 0,
         steps=trace.steps,
         prompt_tokens=trace.total_prompt_tokens,
         completion_tokens=trace.total_completion_tokens,
+        cost_usd=cost_usd(
+            trace.model, trace.total_prompt_tokens, trace.total_completion_tokens
+        ),
         status=trace.status,
     )
 
@@ -148,6 +157,12 @@ def aggregate(results: list[PerTaskMetrics]) -> ModelMetrics:
     succ = [r for r in results if r.success]
     s2s = (sum(r.n_calls for r in succ) / len(succ)) if succ else None
 
+    # CPST (RQ4): total spend across ALL runs / number of successes. Charging
+    # failures' cost to the successes is intentional — it captures the real
+    # price of getting a working result, including wasted attempts.
+    total_cost = sum(r.cost_usd for r in results)
+    cpst = (total_cost / len(succ)) if succ else None
+
     return ModelMetrics(
         model=model,
         n_tasks=n,
@@ -157,6 +172,7 @@ def aggregate(results: list[PerTaskMetrics]) -> ModelMetrics:
         rr=rr,
         s2s=s2s,
         avr=avr,
+        cpst=cpst,
         mean_steps=sum(r.steps for r in results) / n,
         mean_prompt_tokens=sum(r.prompt_tokens for r in results) / n,
         mean_completion_tokens=sum(r.completion_tokens for r in results) / n,
@@ -164,21 +180,23 @@ def aggregate(results: list[PerTaskMetrics]) -> ModelMetrics:
         n_step_cap=sum(1 for r in results if r.status == "step_cap"),
         n_with_error=len(err_tasks),
         total_tool_calls=total_calls,
+        total_cost_usd=total_cost,
     )
 
 
 def format_markdown_table(rows: list[ModelMetrics]) -> str:
     """Render a leaderboard. Empty values shown as '—'."""
     header = (
-        "| model | TSR | TSA(proxy) | HCR | RR | AVR | S2S | mean steps | calls |"
+        "| model | TSR | TSA(proxy) | HCR | RR | AVR | S2S | CPST($) | mean steps | calls |"
     )
-    sep = "|---|---|---|---|---|---|---|---|---|"
+    sep = "|---|---|---|---|---|---|---|---|---|---|"
     lines = [header, sep]
     for r in rows:
         rr = f"{r.rr:.2f}" if r.rr is not None else "-"
         s2s = f"{r.s2s:.1f}" if r.s2s is not None else "-"
+        cpst = f"{r.cpst:.4f}" if r.cpst is not None else "-"
         lines.append(
             f"| {r.model} | {r.tsr:.2f} | {r.tsa_proxy:.2f} | {r.hcr:.2f} | "
-            f"{rr} | {r.avr:.2f} | {s2s} | {r.mean_steps:.1f} | {r.total_tool_calls} |"
+            f"{rr} | {r.avr:.2f} | {s2s} | {cpst} | {r.mean_steps:.1f} | {r.total_tool_calls} |"
         )
     return "\n".join(lines)

@@ -8,7 +8,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28), ('Dave', 45), ('Eve', 22);"}}
     ],
     "check": {"kind": "final_text_regex", "params": {"pattern": "\\b5\\b"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_002_filter_count",
@@ -19,7 +21,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28), ('Dave', 45), ('Eve', 22), ('Frank', 50);"}}
     ],
     "check": {"kind": "final_text_regex", "params": {"pattern": "\\b3\\b"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_003_describe_schema",
@@ -30,7 +34,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL, stock INTEGER); INSERT INTO products (name, price, stock) VALUES ('Widget', 9.99, 100);"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substrings": ["id", "name", "price", "stock"], "require_all": true, "case_insensitive": true}},
-    "tags": ["single-tool", "read-only", "schema"]
+    "tags": ["single-tool", "read-only", "schema"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_004_insert",
@@ -41,7 +47,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Bob', 35), ('Carol', 28);"}}
     ],
     "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT COUNT(*) FROM users WHERE name='Alice' AND age=42", "expected_rows": [[1]]}},
-    "tags": ["single-tool", "write"]
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_005_aggregate",
@@ -52,7 +60,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL); INSERT INTO products (name, price) VALUES ('A', 10.0), ('B', 15.0), ('C', 20.0), ('D', 17.0);"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substring": "15.5"}},
-    "tags": ["single-tool", "read-only", "aggregate"]
+    "tags": ["single-tool", "read-only", "aggregate"],
+    "difficulty": "medium",
+    "skill": "selection"
   },
   {
     "id": "sql_006_join",
@@ -63,7 +73,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT); CREATE TABLE orders (id INTEGER PRIMARY KEY, user_id INTEGER, total REAL); INSERT INTO users (name) VALUES ('Alice'), ('Bob'), ('Carol'); INSERT INTO orders (user_id, total) VALUES (1, 50.0), (1, 30.0), (3, 75.0);"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substrings": ["Alice", "Carol"], "require_all": true}},
-    "tags": ["multi-step", "read-only", "join"]
+    "tags": ["multi-step", "read-only", "join"],
+    "difficulty": "hard",
+    "skill": "composition"
   },
   {
     "id": "sql_007_list_tables",
@@ -74,7 +86,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER); CREATE TABLE products (id INTEGER); CREATE TABLE orders (id INTEGER);"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substrings": ["users", "products", "orders"], "require_all": true, "case_insensitive": true}},
-    "tags": ["single-tool", "read-only", "schema"]
+    "tags": ["single-tool", "read-only", "schema"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_008_update",
@@ -85,7 +99,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 28);"}}
     ],
     "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT age FROM users WHERE name='Bob'", "expected_rows": [[50]]}},
-    "tags": ["single-tool", "write"]
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_009_delete",
@@ -96,7 +112,9 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Charlie', 40);"}}
     ],
     "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT COUNT(*) FROM users WHERE name='Charlie'", "expected_rows": [[0]]}},
-    "tags": ["single-tool", "write"]
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "sql_010_recover_table_typo",
@@ -107,6 +125,47 @@
       {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Carol', 99), ('Dave', 45);"}}
     ],
     "check": {"kind": "final_text_regex", "params": {"pattern": "\\b99\\b"}},
-    "tags": ["error-recovery", "multi-step", "RQ2"]
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "sql_011_oldest_user",
+    "description": "Find the row with the maximum value",
+    "prompt": "In the 'users' table, who is the oldest user? Tell me their name.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER); INSERT INTO users (name, age) VALUES ('Alice', 30), ('Bob', 35), ('Dave', 67), ('Eve', 22);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Dave"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_012_create_and_insert",
+    "description": "Create a table then insert into it",
+    "prompt": "Create a new table named 'log' with two columns: id (integer) and message (text). Then insert one row whose message is 'hello'.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE existing (id INTEGER);"}}
+    ],
+    "check": {"kind": "sqlite_query_returns", "params": {"db": "tasks.db", "sql": "SELECT message FROM log", "expected_rows": [["hello"]]}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "sql_013_top_product",
+    "description": "Aggregate across a join to find the top item",
+    "prompt": "Two tables exist: 'products' (id, name) and 'sales' (product_id, quantity). Which product has the highest total quantity sold? Tell me its name.",
+    "servers": ["sqlite"],
+    "setup": [
+      {"kind": "init_sqlite", "params": {"db": "tasks.db", "sql": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT); CREATE TABLE sales (product_id INTEGER, quantity INTEGER); INSERT INTO products (name) VALUES ('Widget'), ('Gadget'); INSERT INTO sales (product_id, quantity) VALUES (1, 20), (1, 10), (2, 5);"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Widget"}},
+    "tags": ["multi-step", "read-only", "join", "aggregate"],
+    "difficulty": "hard",
+    "skill": "composition"
   }
 ]
