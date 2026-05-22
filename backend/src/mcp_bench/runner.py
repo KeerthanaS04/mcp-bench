@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import sys
 from dataclasses import asdict
 from pathlib import Path
@@ -35,7 +36,7 @@ from .metrics import (
     compute_per_task,
     format_markdown_table,
 )
-from .providers import LLMClient, list_models
+from .providers import LLMClient, cost_usd, list_models
 from .tasks import Task, apply_setup, load_tasks, run_check
 
 console = Console()
@@ -47,7 +48,7 @@ TASKS_DIR = BACKEND_DIR / "tasks"
 DEFAULT_RESULTS_DIR = BACKEND_DIR / "results"
 DEFAULT_TRACES_DIR = BACKEND_DIR / "traces"
 
-VALID_SERVERS = ("filesystem", "sqlite", "fetch")
+VALID_SERVERS = ("filesystem", "sqlite", "fetch", "memory", "github", "postgres")
 
 
 def build_mcp_configs(needed: Iterable[str]) -> list[MCPServerConfig]:
@@ -91,6 +92,48 @@ def build_mcp_configs(needed: Iterable[str]) -> list[MCPServerConfig]:
                     args=["mcp-server-fetch"],
                 )
             )
+        elif name == "memory":
+            # Knowledge-graph memory server. Storage file lives in the sandbox
+            # so reset_sandbox() gives each task a fresh, empty graph.
+            cfgs.append(
+                MCPServerConfig(
+                    name="memory",
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-memory"],
+                    env={"MEMORY_FILE_PATH": str(SANDBOX_DIR / "memory.json")},
+                )
+            )
+        elif name == "github":
+            # Read-oriented GitHub access. Needs a personal-access token; we
+            # fail loudly rather than silently spawn an unauthenticated server.
+            token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN") or os.getenv("GITHUB_TOKEN")
+            if not token:
+                raise RuntimeError(
+                    "github server requires GITHUB_PERSONAL_ACCESS_TOKEN (or "
+                    "GITHUB_TOKEN) in .env"
+                )
+            cfgs.append(
+                MCPServerConfig(
+                    name="github",
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-github"],
+                    env={"GITHUB_PERSONAL_ACCESS_TOKEN": token},
+                )
+            )
+        elif name == "postgres":
+            # Read-only SQL over a Postgres instance. DSN points at the local
+            # Docker container spun up by scripts/setup_postgres.ps1.
+            dsn = os.getenv(
+                "POSTGRES_DSN",
+                "postgresql://postgres:postgres@localhost:5432/mcpbench",
+            )
+            cfgs.append(
+                MCPServerConfig(
+                    name="postgres",
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-postgres", dsn],
+                )
+            )
         else:
             raise ValueError(f"unknown MCP server: {name!r}")
     return cfgs
@@ -130,9 +173,17 @@ async def run_one_task(
     model: str,
     llm: LLMClient,
     traces_dir: Path,
+    distractor_servers: list[str] | None = None,
 ) -> PerTaskMetrics:
     apply_setup(task, SANDBOX_DIR)
-    configs = build_mcp_configs(task.servers)
+    # RQ1: expose distractor servers' tools alongside the task's needed servers.
+    # Setup/check still only touch the real servers; distractors are pure
+    # temptation. A call to a distractor tool counts against TSA (wrong server).
+    servers = list(task.servers)
+    for d in distractor_servers or []:
+        if d not in servers:
+            servers.append(d)
+    configs = build_mcp_configs(servers)
     async with MCPClientPool(configs) as pool:
         available = [t.qualified_name for t in pool.tools]
         trace = await run_agent(
@@ -186,7 +237,11 @@ def load_existing_results(results_path: Path) -> list[PerTaskMetrics]:
             if not line:
                 continue
             rec = json.loads(line)
-            by_id[rec["task_id"]] = PerTaskMetrics(**rec)
+            m = PerTaskMetrics(**rec)
+            # Always (re)derive cost from tokens + current PRICING, so old
+            # records and price-table edits are reflected without re-running.
+            m.cost_usd = cost_usd(m.model, m.prompt_tokens, m.completion_tokens)
+            by_id[rec["task_id"]] = m
     return list(by_id.values())
 
 
@@ -214,9 +269,18 @@ async def amain(args: argparse.Namespace) -> int:
         console.print(f"Available models: {list_models()}")
         return 2
 
+    distractor_servers = (
+        list(VALID_SERVERS) if args.distractors == "all"
+        else [s for s in args.distractors.split(",") if s] if args.distractors
+        else []
+    )
+
+    # Distractor runs are a different experimental condition than the baseline,
+    # so they get their own results file + traces dir (keeps RQ1 separate).
+    tag = "" if not distractor_servers else "__d-" + "-".join(sorted(distractor_servers))
     results_dir = Path(args.results_dir)
-    traces_dir = Path(args.traces_dir) / args.model
-    results_path = results_dir / f"{args.model}.jsonl"
+    traces_dir = Path(args.traces_dir) / f"{args.model}{tag}"
+    results_path = results_dir / f"{args.model}{tag}.jsonl"
 
     done = read_done_task_ids(results_path) if args.resume else set()
     if done:
@@ -226,6 +290,7 @@ async def amain(args: argparse.Namespace) -> int:
     console.print(
         f"[bold]model[/bold]={args.model}  "
         f"[bold]tasks[/bold]={len(todo)} (of {len(tasks)} selected)"
+        + (f"  [bold]distractors[/bold]={distractor_servers}" if distractor_servers else "")
     )
 
     for i, task in enumerate(todo, start=1):
@@ -234,7 +299,7 @@ async def amain(args: argparse.Namespace) -> int:
             f"servers={task.servers}  max_steps={task.max_steps}"
         )
         try:
-            per = await run_one_task(task, args.model, llm, traces_dir)
+            per = await run_one_task(task, args.model, llm, traces_dir, distractor_servers)
         except Exception as e:
             console.print(f"  [red]ERROR: {type(e).__name__}: {e}[/red]")
             if isinstance(e, BaseExceptionGroup):
@@ -293,6 +358,11 @@ def main() -> int:
     )
     p.add_argument("--debug", action="store_true", help="print full tracebacks on task errors")
     p.add_argument("--only", help="run only the task with this id (overrides --tasks/--limit)")
+    p.add_argument(
+        "--distractors",
+        default="",
+        help=f"RQ1: expose extra servers' tools as distractors. 'all' or comma-subset of {VALID_SERVERS}",
+    )
     args = p.parse_args()
     return asyncio.run(amain(args))
 

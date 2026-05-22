@@ -86,12 +86,58 @@ MODELS: dict[str, ModelSpec] = {
     "gpt-oss-120b": ModelSpec(
         "gpt-oss-120b", "groq", "openai/gpt-oss-120b"
     ),
-    # Same logical model as llama-3.3-70b but on Groq — for RQ3 (does the NVIDIA
-    # loop pathology reproduce on a different provider?).
+    # RQ3 cross-provider trio: the SAME logical model (Llama-3.3-70B-Instruct)
+    # served by three providers. NVIDIA's copy degenerate-loops; Groq's and
+    # Together's complete cleanly. This is the cross-provider variance result.
     "llama-3.3-70b-groq": ModelSpec(
         "llama-3.3-70b-groq", "groq", "llama-3.3-70b-versatile"
     ),
+    "llama-3.3-70b-together": ModelSpec(
+        "llama-3.3-70b-together", "together", "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+    ),
 }
+
+
+@dataclass(frozen=True)
+class Price:
+    """USD per 1,000,000 tokens."""
+
+    input_per_mtok: float
+    output_per_mtok: float
+
+
+# Per-model token pricing for RQ4 (cost per successful task).
+#
+# !!! THESE ARE APPROXIMATE LIST PRICES (USD / 1M tokens) as of 2026-05 and
+# MUST be verified against each provider's published pricing page before any
+# RQ4 number is reported. For free-tier-served models (NVIDIA), we use the
+# model's list-price equivalent so cross-provider comparison stays fair, per
+# the METRICS.md / CLAUDE.md convention. Update here; everything downstream
+# (cost_usd, CPST) recomputes automatically.
+PRICING: dict[str, Price] = {
+    "llama-3.1-8b": Price(0.05, 0.08),
+    "llama-3.3-70b": Price(0.60, 0.60),
+    "llama-4-maverick": Price(0.20, 0.60),
+    "qwen-3-next-80b": Price(0.15, 0.60),
+    "deepseek-v4-flash": Price(0.10, 0.40),
+    "deepseek-v4-pro": Price(0.40, 1.20),
+    "qwen-3.5-122b": Price(0.20, 0.80),
+    "gpt-oss-120b": Price(0.15, 0.75),
+    "llama-3.3-70b-groq": Price(0.59, 0.79),
+    "llama-3.3-70b-together": Price(0.88, 0.88),
+}
+
+
+def cost_usd(model_short_name: str, prompt_tokens: int, completion_tokens: int) -> float:
+    """Cost in USD for a (prompt, completion) token pair. Returns 0.0 with a
+    model we have no price for — callers should treat 0.0 as 'unpriced', not free."""
+    price = PRICING.get(model_short_name)
+    if price is None:
+        return 0.0
+    return (
+        prompt_tokens / 1_000_000 * price.input_per_mtok
+        + completion_tokens / 1_000_000 * price.output_per_mtok
+    )
 
 
 @dataclass

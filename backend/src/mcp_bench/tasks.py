@@ -19,10 +19,24 @@ import re
 import shutil
 import sqlite3
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
 from pydantic import BaseModel, Field
+
+
+class Difficulty(str, Enum):
+    easy = "easy"
+    medium = "medium"
+    hard = "hard"
+
+
+class Skill(str, Enum):
+    selection = "selection"  # pick the right tool from what's available
+    composition = "composition"  # chain multiple tools to reach a goal
+    recovery = "recovery"  # handle a tool error and still succeed
+    ambiguity = "ambiguity"  # resolve an under-specified / misleading request
 
 
 class OpSpec(BaseModel):
@@ -41,6 +55,10 @@ class Task(BaseModel):
     check: OpSpec
     max_steps: int = 20
     tags: list[str] = Field(default_factory=list)
+    # Phase 2 stratifiers. Defaults keep the 30 Phase-1 tasks valid; they are
+    # backfilled below. New tasks should set these explicitly.
+    difficulty: Difficulty = Difficulty.easy
+    skill: Skill = Skill.selection
 
 
 @dataclass
@@ -101,11 +119,64 @@ def _setup_init_sqlite(sandbox: Path, params: dict[str, Any]) -> None:
         con.close()
 
 
+def _setup_init_memory(sandbox: Path, params: dict[str, Any]) -> None:
+    """Pre-seed the knowledge-graph memory store (newline-delimited JSON, the
+    format @modelcontextprotocol/server-memory persists). params:
+      entities:  [{name, entityType?, observations?}]
+      relations: [{from, to, relationType}]
+    """
+    lines: list[str] = []
+    for e in params.get("entities", []):
+        lines.append(
+            json.dumps(
+                {
+                    "type": "entity",
+                    "name": e["name"],
+                    "entityType": e.get("entityType", "entity"),
+                    "observations": e.get("observations", []),
+                }
+            )
+        )
+    for r in params.get("relations", []):
+        lines.append(
+            json.dumps(
+                {
+                    "type": "relation",
+                    "from": r["from"],
+                    "to": r["to"],
+                    "relationType": r["relationType"],
+                }
+            )
+        )
+    (sandbox / "memory.json").write_text(
+        "\n".join(lines) + ("\n" if lines else ""), encoding="utf-8"
+    )
+
+
 SETUP_OPS: dict[str, SetupFn] = {
     "write_file": _setup_write_file,
     "mkdir": _setup_mkdir,
     "init_sqlite": _setup_init_sqlite,
+    "init_memory": _setup_init_memory,
 }
+
+
+def _load_memory_graph(sandbox: Path) -> tuple[list[dict], list[dict]]:
+    """Parse the memory store into (entities, relations). Empty if no file."""
+    path = sandbox / "memory.json"
+    entities: list[dict] = []
+    relations: list[dict] = []
+    if path.is_file():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            if obj.get("type") == "entity":
+                entities.append(obj)
+            elif obj.get("type") == "relation":
+                relations.append(obj)
+    return entities, relations
 
 
 def reset_sandbox(sandbox: Path) -> None:
@@ -215,6 +286,61 @@ def _check_sqlite_query_returns(
     return CheckResult(actual == expected, f"actual={actual!r} expected={expected!r}")
 
 
+def _check_memory_has_entity(
+    sandbox: Path, _t: str | None, p: dict[str, Any]
+) -> CheckResult:
+    entities, _ = _load_memory_graph(sandbox)
+    name = p["name"]
+    want_type = p.get("entity_type")
+    for e in entities:
+        if e["name"] == name and (want_type is None or e.get("entityType") == want_type):
+            return CheckResult(True, f"found entity {name!r}")
+    return CheckResult(False, f"no entity {name!r} (type={want_type})")
+
+
+def _check_memory_not_has_entity(
+    sandbox: Path, _t: str | None, p: dict[str, Any]
+) -> CheckResult:
+    entities, _ = _load_memory_graph(sandbox)
+    name = p["name"]
+    present = any(e["name"] == name for e in entities)
+    return CheckResult(not present, f"entity {name!r} present={present}")
+
+
+def _check_memory_has_relation(
+    sandbox: Path, _t: str | None, p: dict[str, Any]
+) -> CheckResult:
+    _, relations = _load_memory_graph(sandbox)
+    frm, to = p["from"], p["to"]
+    want_type = p.get("relation_type")
+    for r in relations:
+        if r["from"] == frm and r["to"] == to and (
+            want_type is None or r.get("relationType") == want_type
+        ):
+            return CheckResult(True, f"found {frm}->{to}")
+    return CheckResult(False, f"no relation {frm}->{to} (type={want_type})")
+
+
+def _check_memory_entity_observation_contains(
+    sandbox: Path, _t: str | None, p: dict[str, Any]
+) -> CheckResult:
+    entities, _ = _load_memory_graph(sandbox)
+    name, needle = p["name"], p["substring"]
+    for e in entities:
+        if e["name"] == name:
+            blob = " ".join(e.get("observations", []))
+            ok = needle.lower() in blob.lower()
+            return CheckResult(ok, f"obs of {name!r}: {e.get('observations')}")
+    return CheckResult(False, f"no entity {name!r}")
+
+
+def _check_memory_entity_count(
+    sandbox: Path, _t: str | None, p: dict[str, Any]
+) -> CheckResult:
+    entities, _ = _load_memory_graph(sandbox)
+    return CheckResult(len(entities) == p["count"], f"count={len(entities)}")
+
+
 def _check_all_of(
     sandbox: Path, final_text: str | None, p: dict[str, Any]
 ) -> CheckResult:
@@ -236,6 +362,11 @@ CHECK_OPS: dict[str, CheckFn] = {
     "final_text_contains": _check_final_text_contains,
     "final_text_regex": _check_final_text_regex,
     "sqlite_query_returns": _check_sqlite_query_returns,
+    "memory_has_entity": _check_memory_has_entity,
+    "memory_not_has_entity": _check_memory_not_has_entity,
+    "memory_has_relation": _check_memory_has_relation,
+    "memory_entity_observation_contains": _check_memory_entity_observation_contains,
+    "memory_entity_count": _check_memory_entity_count,
     "all_of": _check_all_of,
 }
 
