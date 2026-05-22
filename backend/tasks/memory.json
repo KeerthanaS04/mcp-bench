@@ -1,0 +1,156 @@
+[
+  {
+    "id": "mem_001_create_entity",
+    "description": "Create a single entity in the knowledge graph",
+    "prompt": "Store a new entity in memory named 'Alice' with the entity type 'person'.",
+    "servers": ["memory"],
+    "setup": [],
+    "check": {"kind": "memory_has_entity", "params": {"name": "Alice", "entity_type": "person"}},
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_002_entity_with_observation",
+    "description": "Create an entity carrying an observation",
+    "prompt": "Remember that 'Paris' is a city. Record an observation on it stating that it is the capital of France.",
+    "servers": ["memory"],
+    "setup": [],
+    "check": {"kind": "memory_entity_observation_contains", "params": {"name": "Paris", "substring": "capital of France"}},
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_003_create_relation",
+    "description": "Create two entities and a relation between them",
+    "prompt": "Create an entity 'Alice' (type person) and an entity 'Acme' (type company). Then record that Alice works at Acme.",
+    "servers": ["memory"],
+    "setup": [],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "memory_has_entity", "params": {"name": "Alice"}},
+      {"kind": "memory_has_entity", "params": {"name": "Acme"}},
+      {"kind": "memory_has_relation", "params": {"from": "Alice", "to": "Acme"}}
+    ]}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_004_add_observation_existing",
+    "description": "Add an observation to a pre-existing entity",
+    "prompt": "There is already a person named 'Bob' in memory. Add an observation to Bob recording that he likes coffee.",
+    "servers": ["memory"],
+    "setup": [
+      {"kind": "init_memory", "params": {"entities": [{"name": "Bob", "entityType": "person", "observations": ["lives in Seattle"]}]}}
+    ],
+    "check": {"kind": "memory_entity_observation_contains", "params": {"name": "Bob", "substring": "coffee"}},
+    "tags": ["single-tool", "write"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_005_count_entities",
+    "description": "Read the graph and count entities",
+    "prompt": "How many entities are currently stored in memory? Tell me the number.",
+    "servers": ["memory"],
+    "setup": [
+      {"kind": "init_memory", "params": {"entities": [
+        {"name": "Alice", "entityType": "person"},
+        {"name": "Bob", "entityType": "person"},
+        {"name": "Acme", "entityType": "company"}
+      ]}}
+    ],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b3\\b"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_006_search_nodes",
+    "description": "Search the graph for a matching node",
+    "prompt": "Search memory for any node related to 'Python' and tell me the name of the entity you find.",
+    "servers": ["memory"],
+    "setup": [
+      {"kind": "init_memory", "params": {"entities": [
+        {"name": "Guido", "entityType": "person", "observations": ["created the Python language"]},
+        {"name": "Acme", "entityType": "company", "observations": ["sells widgets"]}
+      ]}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Guido"}},
+    "tags": ["single-tool", "read-only", "search"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_007_delete_entity",
+    "description": "Delete an entity from the graph",
+    "prompt": "Delete the entity named 'Bob' from memory.",
+    "servers": ["memory"],
+    "setup": [
+      {"kind": "init_memory", "params": {"entities": [
+        {"name": "Alice", "entityType": "person"},
+        {"name": "Bob", "entityType": "person"}
+      ]}}
+    ],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "memory_not_has_entity", "params": {"name": "Bob"}},
+      {"kind": "memory_has_entity", "params": {"name": "Alice"}}
+    ]}},
+    "tags": ["single-tool", "write"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_008_relation_query",
+    "description": "Query the graph across relations",
+    "prompt": "Using memory, tell me the names of everyone who works at 'Acme'.",
+    "servers": ["memory"],
+    "setup": [
+      {"kind": "init_memory", "params": {
+        "entities": [
+          {"name": "Alice", "entityType": "person"},
+          {"name": "Bob", "entityType": "person"},
+          {"name": "Carol", "entityType": "person"},
+          {"name": "Acme", "entityType": "company"}
+        ],
+        "relations": [
+          {"from": "Alice", "to": "Acme", "relationType": "works_at"},
+          {"from": "Bob", "to": "Acme", "relationType": "works_at"}
+        ]
+      }}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["Alice", "Bob"], "require_all": true}},
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_009_recover_missing_entity",
+    "description": "Error recovery: add observation to a non-existent entity, then create it",
+    "prompt": "Add the observation 'newly created' to an entity named 'Ghost'. If that fails because Ghost does not exist, create Ghost as a person first and then add the observation.",
+    "servers": ["memory"],
+    "setup": [],
+    "check": {"kind": "memory_entity_observation_contains", "params": {"name": "Ghost", "substring": "newly created"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "mem_010_build_chain",
+    "description": "Build a multi-entity relation chain",
+    "prompt": "Create three people named 'X', 'Y', and 'Z'. Record that X knows Y, and that Y knows Z.",
+    "servers": ["memory"],
+    "setup": [],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "memory_has_entity", "params": {"name": "X"}},
+      {"kind": "memory_has_entity", "params": {"name": "Y"}},
+      {"kind": "memory_has_entity", "params": {"name": "Z"}},
+      {"kind": "memory_has_relation", "params": {"from": "X", "to": "Y"}},
+      {"kind": "memory_has_relation", "params": {"from": "Y", "to": "Z"}}
+    ]}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "hard",
+    "skill": "composition"
+  }
+]

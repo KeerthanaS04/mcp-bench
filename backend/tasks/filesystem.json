@@ -8,7 +8,9 @@
       {"kind": "write_file", "params": {"path": "notes.txt", "content": "line one is here\nline two is here\nthe third line says: orange marmalade\nline four\n"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substring": "orange marmalade"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fs_002_write_exact",
@@ -17,7 +19,9 @@
     "servers": ["filesystem"],
     "setup": [],
     "check": {"kind": "file_content_equals", "params": {"path": "greeting.txt", "content": "Hello, MCP!", "strip": true}},
-    "tags": ["single-tool", "write"]
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fs_003_count_txt",
@@ -32,7 +36,9 @@
       {"kind": "write_file", "params": {"path": "notes.md", "content": "# md"}}
     ],
     "check": {"kind": "final_text_regex", "params": {"pattern": "\\b3\\b"}},
-    "tags": ["single-tool", "read-only", "counting"]
+    "tags": ["single-tool", "read-only", "counting"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fs_004_compare_files",
@@ -44,7 +50,9 @@
       {"kind": "write_file", "params": {"path": "b.txt", "content": "shared content here"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
-    "tags": ["multi-step", "read-only"]
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "medium",
+    "skill": "composition"
   },
   {
     "id": "fs_005_find_file",
@@ -59,7 +67,9 @@
       {"kind": "write_file", "params": {"path": "docs/2024/secret_notes.txt", "content": "shh"}}
     ],
     "check": {"kind": "final_text_contains", "params": {"substring": "secret_notes"}},
-    "tags": ["multi-step", "read-only", "search"]
+    "tags": ["multi-step", "read-only", "search"],
+    "difficulty": "medium",
+    "skill": "composition"
   },
   {
     "id": "fs_006_edit_in_place",
@@ -70,7 +80,9 @@
       {"kind": "write_file", "params": {"path": "report.md", "content": "# Report\n\nStatus: TODO\n\nDetails follow.\n"}}
     ],
     "check": {"kind": "file_content_equals", "params": {"path": "report.md", "content": "# Report\n\nStatus: DONE\n\nDetails follow.\n"}},
-    "tags": ["single-tool", "write", "edit"]
+    "tags": ["single-tool", "write", "edit"],
+    "difficulty": "medium",
+    "skill": "selection"
   },
   {
     "id": "fs_007_create_nested",
@@ -82,7 +94,9 @@
       {"kind": "file_exists", "params": {"path": "out/summary.txt"}},
       {"kind": "file_content_contains", "params": {"path": "out/summary.txt", "substring": "done"}}
     ]}},
-    "tags": ["multi-step", "write"]
+    "tags": ["multi-step", "write"],
+    "difficulty": "medium",
+    "skill": "composition"
   },
   {
     "id": "fs_008_rename",
@@ -96,7 +110,9 @@
       {"kind": "file_not_exists", "params": {"path": "old_name.txt"}},
       {"kind": "file_content_equals", "params": {"path": "new_name.txt", "content": "important payload"}}
     ]}},
-    "tags": ["single-tool", "write"]
+    "tags": ["single-tool", "write"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fs_009_recover_missing_file",
@@ -105,7 +121,9 @@
     "servers": ["filesystem"],
     "setup": [],
     "check": {"kind": "file_content_equals", "params": {"path": "does_not_exist.txt", "content": "placeholder", "strip": true}},
-    "tags": ["error-recovery", "multi-step", "RQ2"]
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
   },
   {
     "id": "fs_010_count_lines",
@@ -118,6 +136,74 @@
       {"kind": "write_file", "params": {"path": "c.log", "content": "l1\nl2\nl3\nl4\nl5\n"}}
     ],
     "check": {"kind": "final_text_regex", "params": {"pattern": "\\b10\\b"}},
-    "tags": ["multi-step", "read-only", "counting"]
+    "tags": ["multi-step", "read-only", "counting"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_011_concat_files",
+    "description": "Read multiple files and write their concatenation",
+    "prompt": "There are three text files (a.txt, b.txt, c.txt) in your working directory. Read all of them and write a new file 'combined.txt' that contains the contents of all three.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "a.txt", "content": "apple\n"}},
+      {"kind": "write_file", "params": {"path": "b.txt", "content": "banana\n"}},
+      {"kind": "write_file", "params": {"path": "c.txt", "content": "cherry\n"}}
+    ],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "file_content_contains", "params": {"path": "combined.txt", "substring": "apple"}},
+      {"kind": "file_content_contains", "params": {"path": "combined.txt", "substring": "banana"}},
+      {"kind": "file_content_contains", "params": {"path": "combined.txt", "substring": "cherry"}}
+    ]}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_012_largest_file",
+    "description": "Identify the largest file by size",
+    "prompt": "Several files are in your working directory. Tell me the name of the file that has the largest size in bytes.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "tiny.txt", "content": "x"}},
+      {"kind": "write_file", "params": {"path": "biggest.txt", "content": "this file has by far the most content of all the files in this directory, by a wide margin indeed"}},
+      {"kind": "write_file", "params": {"path": "medium.txt", "content": "a moderate amount of text"}}
+    ],
+    "check": {"kind": "final_text_contains", "params": {"substring": "biggest.txt"}},
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_013_increment_counter",
+    "description": "Read a number, compute, and write it back",
+    "prompt": "The file 'counter.txt' contains a single integer. Read it, add 1 to it, and write the new value back to 'counter.txt'.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "counter.txt", "content": "41"}}
+    ],
+    "check": {"kind": "file_content_equals", "params": {"path": "counter.txt", "content": "42", "strip": true}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_014_delete_by_content",
+    "description": "Find and delete the file with specific content",
+    "prompt": "Three files are in your working directory. Exactly one of them contains the text 'DELETE ME'. Find that file and delete it. Leave the others untouched.",
+    "servers": ["filesystem"],
+    "setup": [
+      {"kind": "write_file", "params": {"path": "keep1.txt", "content": "important data"}},
+      {"kind": "write_file", "params": {"path": "target.txt", "content": "DELETE ME"}},
+      {"kind": "write_file", "params": {"path": "keep2.txt", "content": "also keep this"}}
+    ],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "file_not_exists", "params": {"path": "target.txt"}},
+      {"kind": "file_exists", "params": {"path": "keep1.txt"}},
+      {"kind": "file_exists", "params": {"path": "keep2.txt"}}
+    ]}},
+    "tags": ["multi-step", "write"],
+    "difficulty": "hard",
+    "skill": "composition"
   }
 ]

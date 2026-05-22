@@ -6,7 +6,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fetch_002_json_field",
@@ -15,7 +17,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "Sample Slide Show"}},
-    "tags": ["single-tool", "read-only", "json"]
+    "tags": ["single-tool", "read-only", "json"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fetch_003_two_pages",
@@ -24,7 +28,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
-    "tags": ["multi-step", "read-only"]
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "medium",
+    "skill": "composition"
   },
   {
     "id": "fetch_004_recover_invalid_host",
@@ -33,7 +39,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
-    "tags": ["error-recovery", "multi-step", "RQ2"]
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
   },
   {
     "id": "fetch_005_uuid_format",
@@ -42,7 +50,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_regex", "params": {"pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"}},
-    "tags": ["single-tool", "read-only", "json"]
+    "tags": ["single-tool", "read-only", "json"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fetch_006_keyword_presence",
@@ -51,7 +61,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
   },
   {
     "id": "fetch_007_link_destination",
@@ -60,7 +72,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "iana.org"}},
-    "tags": ["single-tool", "read-only"]
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "medium",
+    "skill": "selection"
   },
   {
     "id": "fetch_008_json_nested",
@@ -69,7 +83,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "all"}},
-    "tags": ["single-tool", "read-only", "json"]
+    "tags": ["single-tool", "read-only", "json"],
+    "difficulty": "medium",
+    "skill": "selection"
   },
   {
     "id": "fetch_009_recover_http_500",
@@ -78,7 +94,9 @@
     "servers": ["fetch"],
     "setup": [],
     "check": {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
-    "tags": ["error-recovery", "multi-step", "RQ2"]
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
   },
   {
     "id": "fetch_010_dual_source",
@@ -90,6 +108,44 @@
       {"kind": "final_text_regex", "params": {"pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"}},
       {"kind": "final_text_contains", "params": {"substring": "Sample Slide Show"}}
     ]}},
-    "tags": ["multi-step", "read-only", "json"]
+    "tags": ["multi-step", "read-only", "json"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fetch_011_host_header",
+    "description": "Fetch a headers endpoint and extract one header",
+    "prompt": "Fetch https://httpbin.org/headers. The response is JSON listing the request headers. Tell me the value of the 'Host' header.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "httpbin.org"}},
+    "tags": ["single-tool", "read-only", "json"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_012_count_slides",
+    "description": "Fetch JSON and count array elements",
+    "prompt": "Fetch https://httpbin.org/json. How many slides are in the slideshow's 'slides' array? Tell me the number.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b2\\b"}},
+    "tags": ["single-tool", "read-only", "json"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_013_combine_sources",
+    "description": "Fetch a page and a JSON endpoint, report both",
+    "prompt": "Fetch https://example.com and https://httpbin.org/uuid. Tell me both the heading on example.com and the uuid value from the other endpoint.",
+    "servers": ["fetch"],
+    "setup": [],
+    "check": {"kind": "all_of", "params": {"checks": [
+      {"kind": "final_text_contains", "params": {"substring": "Example Domain"}},
+      {"kind": "final_text_regex", "params": {"pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"}}
+    ]}},
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "hard",
+    "skill": "composition"
   }
 ]

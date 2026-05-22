@@ -79,8 +79,16 @@ class MCPClientPool:
         await self._exit_stack.__aenter__()
         try:
             for cfg in self.configs:
+                # The SDK uses cfg.env verbatim as the subprocess environment if
+                # it's not None — which would drop PATH and break npx/uvx. Merge
+                # our extras over the SDK's safe default environment instead.
+                env = cfg.env
+                if env is not None:
+                    from mcp.client.stdio import get_default_environment
+
+                    env = {**get_default_environment(), **cfg.env}
                 params = StdioServerParameters(
-                    command=cfg.command, args=cfg.args, env=cfg.env, cwd=cfg.cwd
+                    command=cfg.command, args=cfg.args, env=env, cwd=cfg.cwd
                 )
                 read, write = await self._exit_stack.enter_async_context(
                     stdio_client(params)

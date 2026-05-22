@@ -27,6 +27,10 @@ dist/
 CLAUDE.md
 .claude/
 
+# Personal Word notes + Office temp/lock files (not repo artifacts)
+*.docx
+~$*
+
 # OS
 .DS_Store
 Thumbs.db
