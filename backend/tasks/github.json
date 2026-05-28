@@ -1,0 +1,112 @@
+[
+  {
+    "id": "gh_001_default_branch",
+    "description": "Look up the default branch of a public GitHub repository",
+    "prompt": "What is the name of the default branch of the GitHub repository 'microsoft/vscode'?",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "main"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_002_primary_language",
+    "description": "Report the primary programming language of a public repo",
+    "prompt": "What is the primary programming language reported by GitHub for the 'microsoft/TypeScript' repository?",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "TypeScript"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_003_read_license",
+    "description": "Fetch the LICENSE file of a repo and identify the license",
+    "prompt": "Fetch the LICENSE file from the 'modelcontextprotocol/servers' repository on GitHub and tell me which type of open-source license it grants.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "MIT"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_004_search_org_repos",
+    "description": "Search an organization's repositories and check for existence",
+    "prompt": "Search GitHub for repositories owned by the 'anthropics' organization. Does a repository named 'prompt-eng-interactive-tutorial' appear in the results? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["single-tool", "read-only", "search"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_005_repo_description",
+    "description": "Read a repository description and identify a keyword",
+    "prompt": "Fetch the description of the 'modelcontextprotocol/python-sdk' repository on GitHub. Does the description mention Python? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_006_readme_keyword",
+    "description": "Fetch a README and confirm a keyword is present",
+    "prompt": "Fetch the README of the 'modelcontextprotocol/python-sdk' repository on GitHub. Does it mention the Model Context Protocol? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_007_search_code_filename",
+    "description": "Search a repository for a file matching a keyword",
+    "prompt": "In the GitHub repository 'modelcontextprotocol/servers', is there any file or directory whose name contains the word 'sqlite'? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["multi-step", "read-only", "search"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "gh_008_two_repos_compare",
+    "description": "Fetch metadata from two repos and compare a field",
+    "prompt": "Look up the default branch of both 'microsoft/vscode' and 'modelcontextprotocol/servers'. Are the two default branch names identical? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["multi-step", "read-only"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "gh_009_recover_invalid_repo",
+    "description": "Error recovery: query a non-existent repo, then a real one",
+    "prompt": "First, try to fetch the default branch of the repository 'this-org-does-not-exist-xyz999/nonexistent-repo'. If that fails because the repository does not exist, instead fetch the default branch of 'modelcontextprotocol/servers' and tell me its name.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "main"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "gh_010_search_issues_keyword",
+    "description": "Search issues for a topical keyword and check existence",
+    "prompt": "Search the issues of the 'modelcontextprotocol/python-sdk' repository on GitHub for ones that mention the word 'tool'. Does at least one such issue exist? Answer yes or no.",
+    "servers": ["github"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "yes"}},
+    "tags": ["single-tool", "read-only", "search"],
+    "difficulty": "medium",
+    "skill": "selection"
+  }
+]

@@ -12,7 +12,9 @@ $ErrorActionPreference = "Stop"
 $Container = "mcpbench-postgres"
 $DbName    = "mcpbench"
 $Password  = "postgres"
-$Port      = 5432
+# 5433, not 5432: avoid colliding with a host-side native Postgres used by
+# unrelated projects. The connection string everything else uses matches.
+$Port      = 5433
 
 # 1. Verify Docker is available.
 try {
