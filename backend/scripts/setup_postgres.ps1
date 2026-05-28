@@ -25,7 +25,7 @@ try {
 # 2. Start (or reuse) the container.
 $existing = docker ps -a --filter "name=^/$Container$" --format "{{.Names}}"
 if ($existing -eq $Container) {
-    Write-Host "Container '$Container' exists — ensuring it is running."
+    Write-Host "Container '$Container' exists - ensuring it is running."
     docker start $Container | Out-Null
 } else {
     Write-Host "Creating container '$Container' (postgres:16)..."

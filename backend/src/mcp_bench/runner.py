@@ -152,6 +152,10 @@ def read_done_task_ids(results_path: Path) -> set[str]:
                 rec = json.loads(line)
             except json.JSONDecodeError:
                 continue
+            # A model_error is a transient API/infra failure (rate limit, 5xx),
+            # not a real task outcome — leave it "not done" so resume retries it.
+            if rec.get("status") == "model_error":
+                continue
             tid = rec.get("task_id")
             if tid:
                 done.add(tid)
@@ -237,6 +241,11 @@ def load_existing_results(results_path: Path) -> list[PerTaskMetrics]:
             if not line:
                 continue
             rec = json.loads(line)
+            # Exclude transient API failures from metrics — they are not the
+            # model failing a task, just the provider being unavailable. (Also
+            # retried on resume; see read_done_task_ids.)
+            if rec.get("status") == "model_error":
+                continue
             m = PerTaskMetrics(**rec)
             # Always (re)derive cost from tokens + current PRICING, so old
             # records and price-table edits are reflected without re-running.

@@ -95,6 +95,34 @@ MODELS: dict[str, ModelSpec] = {
     "llama-3.3-70b-together": ModelSpec(
         "llama-3.3-70b-together", "together", "meta-llama/Llama-3.3-70B-Instruct-Turbo"
     ),
+    # Phase 2 candidates for the 8-model leaderboard — chosen for family + size
+    # diversity. Validated via scripts/validate_models.py before the grid run.
+    "gpt-oss-20b": ModelSpec(
+        "gpt-oss-20b", "groq", "openai/gpt-oss-20b"
+    ),
+    "qwen-2.5-7b": ModelSpec(
+        "qwen-2.5-7b", "together", "Qwen/Qwen2.5-7B-Instruct-Turbo"
+    ),
+    "gemma-3-27b": ModelSpec(
+        "gemma-3-27b", "together", "google/gemma-3-27b-it"
+    ),
+    "mixtral-8x22b": ModelSpec(
+        "mixtral-8x22b", "together", "mistralai/Mixtral-8x22B-Instruct-v0.1"
+    ),
+    # DeepSeek family via Together (NVIDIA's DeepSeek endpoints 504'd). The
+    # R1-distill is a reasoning model — lets us ask whether test-time reasoning
+    # helps MCP tool use (a Phase-4 question we can preview here).
+    "deepseek-v4-pro-together": ModelSpec(
+        "deepseek-v4-pro-together", "together", "deepseek-ai/DeepSeek-V4-Pro"
+    ),
+    "deepseek-r1-distill-70b": ModelSpec(
+        "deepseek-r1-distill-70b", "together", "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    ),
+    # Llama 4 on Groq — Maverick leaked tool-calls-as-text on NVIDIA; does Scout
+    # behave on a different provider?
+    "llama-4-scout-groq": ModelSpec(
+        "llama-4-scout-groq", "groq", "meta-llama/llama-4-scout-17b-16e-instruct"
+    ),
 }
 
 
@@ -125,6 +153,13 @@ PRICING: dict[str, Price] = {
     "gpt-oss-120b": Price(0.15, 0.75),
     "llama-3.3-70b-groq": Price(0.59, 0.79),
     "llama-3.3-70b-together": Price(0.88, 0.88),
+    "gpt-oss-20b": Price(0.10, 0.50),
+    "qwen-2.5-7b": Price(0.30, 0.30),
+    "gemma-3-27b": Price(0.80, 0.80),
+    "mixtral-8x22b": Price(1.20, 1.20),
+    "deepseek-v4-pro-together": Price(0.40, 1.20),
+    "deepseek-r1-distill-70b": Price(2.00, 2.00),
+    "llama-4-scout-groq": Price(0.11, 0.34),
 }
 
 
@@ -160,6 +195,22 @@ class ChatResponse:
 
 def list_models() -> list[str]:
     return sorted(MODELS)
+
+
+# The locked Phase-2 leaderboard set: 8 models, 5 families, 3 providers, with
+# large/small size pairs for GPT-OSS, Qwen, and Llama. Validated working via
+# scripts/validate_models.py (2026-05). Gemma/Mixtral need paid Together
+# dedicated endpoints; NVIDIA's DeepSeek/Qwen3.5 endpoints were flaky.
+LEADERBOARD_MODELS: list[str] = [
+    "gpt-oss-120b",
+    "gpt-oss-20b",
+    "qwen-3-next-80b",
+    "qwen-2.5-7b",
+    "llama-3.3-70b-together",
+    "llama-3.1-8b",
+    "deepseek-v4-pro-together",
+    "llama-4-scout-groq",
+]
 
 
 class LLMClient:
