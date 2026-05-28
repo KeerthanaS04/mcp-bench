@@ -123,9 +123,12 @@ def build_mcp_configs(needed: Iterable[str]) -> list[MCPServerConfig]:
         elif name == "postgres":
             # Read-only SQL over a Postgres instance. DSN points at the local
             # Docker container spun up by scripts/setup_postgres.ps1.
+            # Default port is 5433 to avoid colliding with any native Postgres
+            # the host machine already runs on 5432 for unrelated projects.
+            # Override with POSTGRES_DSN in .env if you need a different target.
             dsn = os.getenv(
                 "POSTGRES_DSN",
-                "postgresql://postgres:postgres@localhost:5432/mcpbench",
+                "postgresql://postgres:postgres@localhost:5433/mcpbench",
             )
             cfgs.append(
                 MCPServerConfig(

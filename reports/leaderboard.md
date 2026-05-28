@@ -1,16 +1,16 @@
 # MCP-Bench leaderboard
 
-_Generated 2026-05-28 17:53 UTC. Programmatic ground truth; no LLM-as-judge._
+_Generated 2026-05-28 20:57 UTC. Programmatic ground truth; no LLM-as-judge._
 
 ## Main leaderboard (baseline — only the task's required server exposed)
 
 | model | n | TSR | TSA(proxy) | HCR | RR | AVR | S2S | CPST($) | mean steps | calls |
 |---|---|---|---|---|---|---|---|---|---|---|
 | deepseek-v4-pro-together | 50 | 0.96 | 1.00 | 0.00 | 1.00 | 0.95 | 1.8 | 0.0020 | 2.7 | 93 |
-| gpt-oss-120b | 50 | 0.92 | 1.00 | 0.00 | 1.00 | 0.96 | 1.8 | 0.0006 | 2.8 | 92 |
-| gpt-oss-20b | 50 | 0.92 | 1.00 | 0.00 | 0.88 | 0.78 | 1.9 | 0.0004 | 3.0 | 99 |
+| gpt-oss-20b | 67 | 0.93 | 1.00 | 0.00 | 0.93 | 0.79 | 2.0 | 0.0005 | 3.0 | 137 |
+| gpt-oss-120b | 66 | 0.92 | 1.00 | 0.00 | 0.91 | 0.92 | 2.0 | 0.0006 | 3.0 | 134 |
+| qwen-3-next-80b | 70 | 0.86 | 1.00 | 0.00 | 0.60 | 0.87 | 1.9 | 0.0017 | 3.0 | 141 |
 | llama-4-scout-groq | 44 | 0.84 | 1.00 | 0.00 | 0.60 | 0.92 | 1.5 | 0.0006 | 2.5 | 65 |
-| qwen-3-next-80b | 50 | 0.84 | 1.00 | 0.00 | 0.43 | 0.90 | 1.8 | 0.0009 | 2.9 | 97 |
 | llama-3.3-70b-together | 50 | 0.72 | 0.55 | 0.58 | 0.21 | 0.35 | 1.4 | 0.0033 | 3.7 | 137 |
 | qwen-2.5-7b | 50 | 0.70 | 1.00 | 0.06 | 0.33 | 0.82 | 1.7 | 0.0008 | 2.2 | 90 |
 | llama-3.1-8b | 38 | 0.55 | 1.00 | 0.01 | 0.43 | 0.37 | 2.7 | 0.0006 | 3.8 | 108 |
