@@ -123,9 +123,12 @@ def build_mcp_configs(needed: Iterable[str]) -> list[MCPServerConfig]:
         elif name == "postgres":
             # Read-only SQL over a Postgres instance. DSN points at the local
             # Docker container spun up by scripts/setup_postgres.ps1.
+            # Default port is 5433 to avoid colliding with any native Postgres
+            # the host machine already runs on 5432 for unrelated projects.
+            # Override with POSTGRES_DSN in .env if you need a different target.
             dsn = os.getenv(
                 "POSTGRES_DSN",
-                "postgresql://postgres:postgres@localhost:5432/mcpbench",
+                "postgresql://postgres:postgres@localhost:5433/mcpbench",
             )
             cfgs.append(
                 MCPServerConfig(
@@ -151,6 +154,10 @@ def read_done_task_ids(results_path: Path) -> set[str]:
             try:
                 rec = json.loads(line)
             except json.JSONDecodeError:
+                continue
+            # A model_error is a transient API/infra failure (rate limit, 5xx),
+            # not a real task outcome — leave it "not done" so resume retries it.
+            if rec.get("status") == "model_error":
                 continue
             tid = rec.get("task_id")
             if tid:
@@ -237,6 +244,11 @@ def load_existing_results(results_path: Path) -> list[PerTaskMetrics]:
             if not line:
                 continue
             rec = json.loads(line)
+            # Exclude transient API failures from metrics — they are not the
+            # model failing a task, just the provider being unavailable. (Also
+            # retried on resume; see read_done_task_ids.)
+            if rec.get("status") == "model_error":
+                continue
             m = PerTaskMetrics(**rec)
             # Always (re)derive cost from tokens + current PRICING, so old
             # records and price-table edits are reflected without re-running.

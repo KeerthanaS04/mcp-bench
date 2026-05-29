@@ -12,7 +12,9 @@ $ErrorActionPreference = "Stop"
 $Container = "mcpbench-postgres"
 $DbName    = "mcpbench"
 $Password  = "postgres"
-$Port      = 5432
+# 5433, not 5432: avoid colliding with a host-side native Postgres used by
+# unrelated projects. The connection string everything else uses matches.
+$Port      = 5433
 
 # 1. Verify Docker is available.
 try {
@@ -25,7 +27,7 @@ try {
 # 2. Start (or reuse) the container.
 $existing = docker ps -a --filter "name=^/$Container$" --format "{{.Names}}"
 if ($existing -eq $Container) {
-    Write-Host "Container '$Container' exists — ensuring it is running."
+    Write-Host "Container '$Container' exists - ensuring it is running."
     docker start $Container | Out-Null
 } else {
     Write-Host "Creating container '$Container' (postgres:16)..."

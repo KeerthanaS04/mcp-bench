@@ -1,0 +1,112 @@
+[
+  {
+    "id": "pg_001_count_employees",
+    "description": "Count rows in a single table",
+    "prompt": "Query the database: how many employees are there in total?",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b5\\b"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_002_list_departments",
+    "description": "Read every row of the departments table",
+    "prompt": "Query the database for the names of every department. List all of them.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["Engineering", "Sales", "HR"], "require_all": true}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_003_oldest_employee",
+    "description": "Find the row with the earliest date in a column",
+    "prompt": "Which employee has the earliest hire date according to the database? Tell me their name.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Eve"}},
+    "tags": ["single-tool", "read-only"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_004_average_salary",
+    "description": "Aggregate query (average) across a table",
+    "prompt": "Compute the average salary across all employees. Tell me the integer-rounded value.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "94,?000"}},
+    "tags": ["single-tool", "read-only", "aggregate"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_005_highest_paid",
+    "description": "Find the employee with the maximum value across a join",
+    "prompt": "Which employee earns the highest salary? Tell me their name.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Alice"}},
+    "tags": ["multi-step", "read-only", "join"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_006_recent_sales_hire",
+    "description": "Join with a WHERE filter and order by date",
+    "prompt": "Who is the most recently hired employee in the 'Sales' department? Tell me their name.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substring": "Dave"}},
+    "tags": ["multi-step", "read-only", "join"],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_007_count_by_dept",
+    "description": "Count rows filtered by joined table",
+    "prompt": "How many employees work in the 'Engineering' department? Give me the count.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "\\b2\\b"}},
+    "tags": ["multi-step", "read-only", "join"],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_008_total_payroll",
+    "description": "Aggregate across all rows (sum)",
+    "prompt": "What is the total payroll (sum of every salary) across all employees?",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "470,?000"}},
+    "tags": ["single-tool", "read-only", "aggregate"],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_009_list_tables",
+    "description": "Enumerate all tables in the schema",
+    "prompt": "What tables exist in this Postgres database? List every one of them.",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_contains", "params": {"substrings": ["employees", "departments", "salaries"], "require_all": true, "case_insensitive": true}},
+    "tags": ["single-tool", "read-only", "schema"],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_010_recover_table_typo",
+    "description": "Error recovery: query a misspelled table name",
+    "prompt": "Query the 'salary' table for the maximum salary amount. (Note: that table name might be misspelled in the prompt — figure out the correct table if so.)",
+    "servers": ["postgres"],
+    "setup": [],
+    "check": {"kind": "final_text_regex", "params": {"pattern": "120,?000"}},
+    "tags": ["error-recovery", "multi-step", "RQ2"],
+    "difficulty": "medium",
+    "skill": "recovery"
+  }
+]

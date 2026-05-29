@@ -187,16 +187,16 @@ def aggregate(results: list[PerTaskMetrics]) -> ModelMetrics:
 def format_markdown_table(rows: list[ModelMetrics]) -> str:
     """Render a leaderboard. Empty values shown as '—'."""
     header = (
-        "| model | TSR | TSA(proxy) | HCR | RR | AVR | S2S | CPST($) | mean steps | calls |"
+        "| model | n | TSR | TSA(proxy) | HCR | RR | AVR | S2S | CPST($) | mean steps | calls |"
     )
-    sep = "|---|---|---|---|---|---|---|---|---|---|"
+    sep = "|---|---|---|---|---|---|---|---|---|---|---|"
     lines = [header, sep]
     for r in rows:
         rr = f"{r.rr:.2f}" if r.rr is not None else "-"
         s2s = f"{r.s2s:.1f}" if r.s2s is not None else "-"
         cpst = f"{r.cpst:.4f}" if r.cpst is not None else "-"
         lines.append(
-            f"| {r.model} | {r.tsr:.2f} | {r.tsa_proxy:.2f} | {r.hcr:.2f} | "
+            f"| {r.model} | {r.n_tasks} | {r.tsr:.2f} | {r.tsa_proxy:.2f} | {r.hcr:.2f} | "
             f"{rr} | {r.avr:.2f} | {s2s} | {cpst} | {r.mean_steps:.1f} | {r.total_tool_calls} |"
         )
     return "\n".join(lines)
