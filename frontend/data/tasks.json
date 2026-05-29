@@ -1,0 +1,875 @@
+[
+  {
+    "id": "fetch_001_title",
+    "description": "Fetch a page and identify its title text",
+    "prompt": "Fetch the page at https://example.com and tell me what heading or title appears on it.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_002_json_field",
+    "description": "Fetch a JSON endpoint and extract a field",
+    "prompt": "Fetch the JSON at https://httpbin.org/json and tell me the value of the 'title' field of the slideshow.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_003_two_pages",
+    "description": "Fetch two pages and answer a question about both",
+    "prompt": "Fetch https://example.com and https://www.iana.org/help/example-domains. Do both pages mention the word 'example'? Answer yes or no.",
+    "server": "fetch",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fetch_004_recover_invalid_host",
+    "description": "Error recovery after a host that does not resolve",
+    "prompt": "Try to fetch http://this-domain-does-not-exist-987654321.invalid/ first. If it fails, fetch https://example.com instead and tell me what heading is on that page.",
+    "server": "fetch",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "fetch_005_uuid_format",
+    "description": "Fetch a UUID endpoint and report the value",
+    "prompt": "Fetch https://httpbin.org/uuid and tell me the UUID value that the response contains.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_006_keyword_presence",
+    "description": "Fetch a page and check for a specific word",
+    "prompt": "Fetch https://example.com. Does the page body contain the word 'illustrative'? Answer yes or no.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_007_link_destination",
+    "description": "Fetch a page and identify the link it points to",
+    "prompt": "Fetch https://example.com. The page contains exactly one hyperlink in its body. Tell me what domain that link points to.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_008_json_nested",
+    "description": "Fetch a JSON document and navigate a nested field",
+    "prompt": "Fetch https://httpbin.org/json. In the slideshow object, the slides array has multiple entries. Tell me the 'type' of the first slide.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_009_recover_http_500",
+    "description": "Error recovery after a non-2xx HTTP response",
+    "prompt": "Fetch https://httpbin.org/status/500. If the request fails or returns an error, fetch https://example.com instead and tell me the page's main heading.",
+    "server": "fetch",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "fetch_010_dual_source",
+    "description": "Fetch two endpoints and combine the result",
+    "prompt": "Fetch both https://httpbin.org/uuid and https://httpbin.org/json. Tell me both: the uuid value, and the title of the slideshow.",
+    "server": "fetch",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fetch_011_host_header",
+    "description": "Fetch a headers endpoint and extract one header",
+    "prompt": "Fetch https://httpbin.org/headers. The response is JSON listing the request headers. Tell me the value of the 'Host' header.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_012_count_slides",
+    "description": "Fetch JSON and count array elements",
+    "prompt": "Fetch https://httpbin.org/json. How many slides are in the slideshow's 'slides' array? Tell me the number.",
+    "server": "fetch",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "json"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fetch_013_combine_sources",
+    "description": "Fetch a page and a JSON endpoint, report both",
+    "prompt": "Fetch https://example.com and https://httpbin.org/uuid. Tell me both the heading on example.com and the uuid value from the other endpoint.",
+    "server": "fetch",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_001_read_line",
+    "description": "Read a file and report a specific line",
+    "prompt": "Read the file 'notes.txt' in your working directory and tell me what the third line says.",
+    "server": "filesystem",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fs_002_write_exact",
+    "description": "Write a file with exact content",
+    "prompt": "Create a file named 'greeting.txt' in your working directory containing exactly the text: Hello, MCP!",
+    "server": "filesystem",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fs_003_count_txt",
+    "description": "List a directory and count files by extension",
+    "prompt": "Look at the files in your working directory. How many of them have the .txt extension?",
+    "server": "filesystem",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "counting"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fs_004_compare_files",
+    "description": "Read two files and compare their content",
+    "prompt": "Read the files 'a.txt' and 'b.txt'. Do they contain the same content? Answer yes or no.",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_005_find_file",
+    "description": "Search for a file by name pattern in a directory tree",
+    "prompt": "There is a file somewhere in this directory tree whose name contains the word 'secret'. Find it and tell me its name (just the filename, not the full path).",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "search"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_006_edit_in_place",
+    "description": "Edit a file by replacing one word",
+    "prompt": "There is a file 'report.md' in your working directory. Replace the word 'TODO' with the word 'DONE' in that file. Keep the rest of the content unchanged.",
+    "server": "filesystem",
+    "tags": [
+      "single-tool",
+      "write",
+      "edit"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "fs_007_create_nested",
+    "description": "Create a directory and place a file in it",
+    "prompt": "Create a directory named 'out' in your working directory, and inside it create a file 'summary.txt' that contains the word: done",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_008_rename",
+    "description": "Rename a file, preserving content",
+    "prompt": "Rename the file 'old_name.txt' to 'new_name.txt'. Do not change its content.",
+    "server": "filesystem",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "fs_009_recover_missing_file",
+    "description": "Error recovery: read a missing file, then create it",
+    "prompt": "First, try to read the file 'does_not_exist.txt'. If reading it fails because the file is missing, then create that file with the content: placeholder",
+    "server": "filesystem",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "fs_010_count_lines",
+    "description": "Read multiple files and sum a numeric property",
+    "prompt": "There are several .log files in your working directory. Count the total number of lines across all of them and tell me the total. (A line is anything ending in a newline.)",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "counting"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_011_concat_files",
+    "description": "Read multiple files and write their concatenation",
+    "prompt": "There are three text files (a.txt, b.txt, c.txt) in your working directory. Read all of them and write a new file 'combined.txt' that contains the contents of all three.",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_012_largest_file",
+    "description": "Identify the largest file by size",
+    "prompt": "Several files are in your working directory. Tell me the name of the file that has the largest size in bytes.",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_013_increment_counter",
+    "description": "Read a number, compute, and write it back",
+    "prompt": "The file 'counter.txt' contains a single integer. Read it, add 1 to it, and write the new value back to 'counter.txt'.",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "fs_014_delete_by_content",
+    "description": "Find and delete the file with specific content",
+    "prompt": "Three files are in your working directory. Exactly one of them contains the text 'DELETE ME'. Find that file and delete it. Leave the others untouched.",
+    "server": "filesystem",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "gh_001_default_branch",
+    "description": "Look up the default branch of a public GitHub repository",
+    "prompt": "What is the name of the default branch of the GitHub repository 'microsoft/vscode'?",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_002_primary_language",
+    "description": "Report the primary programming language of a public repo",
+    "prompt": "What is the primary programming language reported by GitHub for the 'microsoft/TypeScript' repository?",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_003_read_license",
+    "description": "Fetch the LICENSE file of a repo and identify the license",
+    "prompt": "Fetch the LICENSE file from the 'modelcontextprotocol/servers' repository on GitHub and tell me which type of open-source license it grants.",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_004_search_org_repos",
+    "description": "Search an organization's repositories and check for existence",
+    "prompt": "Search GitHub for repositories owned by the 'anthropics' organization. Does a repository named 'prompt-eng-interactive-tutorial' appear in the results? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "search"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_005_repo_description",
+    "description": "Read a repository description and identify a keyword",
+    "prompt": "Fetch the description of the 'modelcontextprotocol/python-sdk' repository on GitHub. Does the description mention Python? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_006_readme_keyword",
+    "description": "Fetch a README and confirm a keyword is present",
+    "prompt": "Fetch the README of the 'modelcontextprotocol/python-sdk' repository on GitHub. Does it mention the Model Context Protocol? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "gh_007_search_code_filename",
+    "description": "Search a repository for a file matching a keyword",
+    "prompt": "In the GitHub repository 'modelcontextprotocol/servers', is there any file or directory whose name contains the word 'sqlite'? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "search"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "gh_008_two_repos_compare",
+    "description": "Fetch metadata from two repos and compare a field",
+    "prompt": "Look up the default branch of both 'microsoft/vscode' and 'modelcontextprotocol/servers'. Are the two default branch names identical? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "gh_009_recover_invalid_repo",
+    "description": "Error recovery: query a non-existent repo, then a real one",
+    "prompt": "First, try to fetch the default branch of the repository 'this-org-does-not-exist-xyz999/nonexistent-repo'. If that fails because the repository does not exist, instead fetch the default branch of 'modelcontextprotocol/servers' and tell me its name.",
+    "server": "github",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "gh_010_search_issues_keyword",
+    "description": "Search issues for a topical keyword and check existence",
+    "prompt": "Search the issues of the 'modelcontextprotocol/python-sdk' repository on GitHub for ones that mention the word 'tool'. Does at least one such issue exist? Answer yes or no.",
+    "server": "github",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "search"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_001_create_entity",
+    "description": "Create a single entity in the knowledge graph",
+    "prompt": "Store a new entity in memory named 'Alice' with the entity type 'person'.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_002_entity_with_observation",
+    "description": "Create an entity carrying an observation",
+    "prompt": "Remember that 'Paris' is a city. Record an observation on it stating that it is the capital of France.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_003_create_relation",
+    "description": "Create two entities and a relation between them",
+    "prompt": "Create an entity 'Alice' (type person) and an entity 'Acme' (type company). Then record that Alice works at Acme.",
+    "server": "memory",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_004_add_observation_existing",
+    "description": "Add an observation to a pre-existing entity",
+    "prompt": "There is already a person named 'Bob' in memory. Add an observation to Bob recording that he likes coffee.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_005_count_entities",
+    "description": "Read the graph and count entities",
+    "prompt": "How many entities are currently stored in memory? Tell me the number.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_006_search_nodes",
+    "description": "Search the graph for a matching node",
+    "prompt": "Search memory for any node related to 'Python' and tell me the name of the entity you find.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "search"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "mem_007_delete_entity",
+    "description": "Delete an entity from the graph",
+    "prompt": "Delete the entity named 'Bob' from memory.",
+    "server": "memory",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_008_relation_query",
+    "description": "Query the graph across relations",
+    "prompt": "Using memory, tell me the names of everyone who works at 'Acme'.",
+    "server": "memory",
+    "tags": [
+      "multi-step",
+      "read-only"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "mem_009_recover_missing_entity",
+    "description": "Error recovery: add observation to a non-existent entity, then create it",
+    "prompt": "Add the observation 'newly created' to an entity named 'Ghost'. If that fails because Ghost does not exist, create Ghost as a person first and then add the observation.",
+    "server": "memory",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "mem_010_build_chain",
+    "description": "Build a multi-entity relation chain",
+    "prompt": "Create three people named 'X', 'Y', and 'Z'. Record that X knows Y, and that Y knows Z.",
+    "server": "memory",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_001_count_employees",
+    "description": "Count rows in a single table",
+    "prompt": "Query the database: how many employees are there in total?",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_002_list_departments",
+    "description": "Read every row of the departments table",
+    "prompt": "Query the database for the names of every department. List all of them.",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_003_oldest_employee",
+    "description": "Find the row with the earliest date in a column",
+    "prompt": "Which employee has the earliest hire date according to the database? Tell me their name.",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_004_average_salary",
+    "description": "Aggregate query (average) across a table",
+    "prompt": "Compute the average salary across all employees. Tell me the integer-rounded value.",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "aggregate"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_005_highest_paid",
+    "description": "Find the employee with the maximum value across a join",
+    "prompt": "Which employee earns the highest salary? Tell me their name.",
+    "server": "postgres",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "join"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_006_recent_sales_hire",
+    "description": "Join with a WHERE filter and order by date",
+    "prompt": "Who is the most recently hired employee in the 'Sales' department? Tell me their name.",
+    "server": "postgres",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "join"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_007_count_by_dept",
+    "description": "Count rows filtered by joined table",
+    "prompt": "How many employees work in the 'Engineering' department? Give me the count.",
+    "server": "postgres",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "join"
+    ],
+    "difficulty": "medium",
+    "skill": "composition"
+  },
+  {
+    "id": "pg_008_total_payroll",
+    "description": "Aggregate across all rows (sum)",
+    "prompt": "What is the total payroll (sum of every salary) across all employees?",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "aggregate"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_009_list_tables",
+    "description": "Enumerate all tables in the schema",
+    "prompt": "What tables exist in this Postgres database? List every one of them.",
+    "server": "postgres",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "schema"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "pg_010_recover_table_typo",
+    "description": "Error recovery: query a misspelled table name",
+    "prompt": "Query the 'salary' table for the maximum salary amount. (Note: that table name might be misspelled in the prompt — figure out the correct table if so.)",
+    "server": "postgres",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "sql_001_count_rows",
+    "description": "Count rows in a single table",
+    "prompt": "How many rows are in the 'users' table?",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_002_filter_count",
+    "description": "Count with a WHERE filter",
+    "prompt": "How many users in the 'users' table are older than 30? Tell me the count.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_003_describe_schema",
+    "description": "List the columns of a table",
+    "prompt": "List every column name in the 'products' table.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "schema"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_004_insert",
+    "description": "Insert a new row",
+    "prompt": "Insert a new user into the 'users' table with name 'Alice' and age 42.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_005_aggregate",
+    "description": "Aggregate query (average)",
+    "prompt": "What is the average price of products in the 'products' table? Round to one decimal place.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "aggregate"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_006_join",
+    "description": "Join two tables and list results",
+    "prompt": "Find the names of every user who has placed at least one order. Use the 'users' and 'orders' tables.",
+    "server": "sqlite",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "join"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "sql_007_list_tables",
+    "description": "Enumerate all tables in the database",
+    "prompt": "What tables exist in this database? List every one of them.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only",
+      "schema"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_008_update",
+    "description": "Update an existing row",
+    "prompt": "In the 'users' table, change Bob's age to 50.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_009_delete",
+    "description": "Delete a row matching a condition",
+    "prompt": "Delete the user named 'Charlie' from the 'users' table.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "write"
+    ],
+    "difficulty": "easy",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_010_recover_table_typo",
+    "description": "Error recovery: query a misspelled table name",
+    "prompt": "Find the maximum age in the 'userz' table and report it. (Note: that name might be misspelled in the prompt — figure out the correct table if so.)",
+    "server": "sqlite",
+    "tags": [
+      "error-recovery",
+      "multi-step",
+      "RQ2"
+    ],
+    "difficulty": "medium",
+    "skill": "recovery"
+  },
+  {
+    "id": "sql_011_oldest_user",
+    "description": "Find the row with the maximum value",
+    "prompt": "In the 'users' table, who is the oldest user? Tell me their name.",
+    "server": "sqlite",
+    "tags": [
+      "single-tool",
+      "read-only"
+    ],
+    "difficulty": "medium",
+    "skill": "selection"
+  },
+  {
+    "id": "sql_012_create_and_insert",
+    "description": "Create a table then insert into it",
+    "prompt": "Create a new table named 'log' with two columns: id (integer) and message (text). Then insert one row whose message is 'hello'.",
+    "server": "sqlite",
+    "tags": [
+      "multi-step",
+      "write"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  },
+  {
+    "id": "sql_013_top_product",
+    "description": "Aggregate across a join to find the top item",
+    "prompt": "Two tables exist: 'products' (id, name) and 'sales' (product_id, quantity). Which product has the highest total quantity sold? Tell me its name.",
+    "server": "sqlite",
+    "tags": [
+      "multi-step",
+      "read-only",
+      "join",
+      "aggregate"
+    ],
+    "difficulty": "hard",
+    "skill": "composition"
+  }
+]

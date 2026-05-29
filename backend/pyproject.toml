@@ -18,6 +18,14 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.5",
 ]
+# Phase 3 analysis stack. Heavy (sentence-transformers pulls torch) so kept
+# optional; install with: uv sync --extra analysis
+analysis = [
+    "sentence-transformers>=3.0",
+    "hdbscan>=0.8",
+    "numpy>=1.26",
+    "scikit-learn>=1.3",
+]
 
 [build-system]
 requires = ["hatchling"]
