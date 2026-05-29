@@ -48,6 +48,7 @@ results/
 traces/
 *.log
 wandb/
+hf_dataset_build/
 
 # Sandbox contents (working files created by filesystem MCP server during runs)
 **/sandbox/*

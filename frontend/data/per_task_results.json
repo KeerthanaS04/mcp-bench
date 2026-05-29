@@ -1,0 +1,630 @@
+{
+  "models": [
+    "deepseek-v4-pro-together",
+    "gpt-oss-120b",
+    "gpt-oss-20b",
+    "llama-3.1-8b",
+    "llama-3.3-70b-groq",
+    "llama-3.3-70b-together",
+    "llama-4-scout-groq",
+    "qwen-2.5-7b",
+    "qwen-3-next-80b"
+  ],
+  "tasks": {
+    "fetch_001_title": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_002_json_field": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": false
+    },
+    "fetch_003_two_pages": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_004_recover_invalid_host": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_005_uuid_format": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_006_keyword_presence": {
+      "deepseek-v4-pro-together": false,
+      "gpt-oss-120b": false,
+      "gpt-oss-20b": false,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": false
+    },
+    "fetch_007_link_destination": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": false
+    },
+    "fetch_008_json_nested": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_009_recover_http_500": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_010_dual_source": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": false,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": false
+    },
+    "fetch_011_host_header": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_012_count_slides": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fetch_013_combine_sources": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_001_read_line": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_002_write_exact": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_003_count_txt": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_004_compare_files": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": false,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_005_find_file": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_006_edit_in_place": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": false
+    },
+    "fs_007_create_nested": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_008_rename": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_009_recover_missing_file": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_010_count_lines": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": false,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-groq": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_011_concat_files": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_012_largest_file": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "fs_013_increment_counter": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": false,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "fs_014_delete_by_content": {
+      "deepseek-v4-pro-together": false,
+      "gpt-oss-120b": false,
+      "gpt-oss-20b": false,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": false
+    },
+    "mem_001_create_entity": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "mem_002_entity_with_observation": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "mem_003_create_relation": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "mem_004_add_observation_existing": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": false
+    },
+    "mem_005_count_entities": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "mem_006_search_nodes": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "mem_007_delete_entity": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "mem_008_relation_query": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": false,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "mem_009_recover_missing_entity": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": false
+    },
+    "mem_010_build_chain": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_001_count_rows": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_002_filter_count": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_003_describe_schema": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_004_insert": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_005_aggregate": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_006_join": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_007_list_tables": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_008_update": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_009_delete": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_010_recover_table_typo": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_011_oldest_user": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": false,
+      "qwen-3-next-80b": true
+    },
+    "sql_012_create_and_insert": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.3-70b-together": false,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "sql_013_top_product": {
+      "deepseek-v4-pro-together": true,
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-3.3-70b-together": true,
+      "llama-4-scout-groq": true,
+      "qwen-2.5-7b": true,
+      "qwen-3-next-80b": true
+    },
+    "gh_001_default_branch": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-4-scout-groq": false,
+      "qwen-3-next-80b": true
+    },
+    "gh_002_primary_language": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "llama-4-scout-groq": false,
+      "qwen-3-next-80b": true
+    },
+    "gh_003_read_license": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "llama-4-scout-groq": true,
+      "qwen-3-next-80b": true
+    },
+    "gh_005_repo_description": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-4-scout-groq": true,
+      "qwen-3-next-80b": true
+    },
+    "gh_008_two_repos_compare": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": true
+    },
+    "gh_009_recover_invalid_repo": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": true
+    },
+    "pg_001_count_employees": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "pg_002_list_departments": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": true,
+      "qwen-3-next-80b": true
+    },
+    "pg_003_oldest_employee": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "pg_004_average_salary": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": false
+    },
+    "pg_005_highest_paid": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": false
+    },
+    "pg_006_recent_sales_hire": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": true
+    },
+    "pg_007_count_by_dept": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "qwen-3-next-80b": true
+    },
+    "pg_008_total_payroll": {
+      "gpt-oss-120b": false,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "pg_009_list_tables": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "pg_010_recover_table_typo": {
+      "gpt-oss-120b": true,
+      "gpt-oss-20b": true,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "gh_007_search_code_filename": {
+      "gpt-oss-20b": false,
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "gh_004_search_org_repos": {
+      "llama-3.1-8b": false,
+      "llama-4-scout-groq": true,
+      "qwen-3-next-80b": true
+    },
+    "gh_006_readme_keyword": {
+      "llama-3.1-8b": false,
+      "qwen-3-next-80b": true
+    },
+    "gh_010_search_issues_keyword": {
+      "llama-3.1-8b": true,
+      "qwen-3-next-80b": true
+    }
+  }
+}
